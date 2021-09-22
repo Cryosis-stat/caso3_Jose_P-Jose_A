@@ -1,1 +1,0 @@
-export { ArticleController } from './articlescontroller'

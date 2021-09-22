@@ -1,28 +1,21 @@
 {
-  "name": "baseservice",
+  "name": "caso3",
   "version": "1.0.0",
-  "description": "Minimal starting point for an api service",
-  "main": "index.ts",
-  "scripts": {
-    "checklint": "eslint ./*.ts --fix",
-    "start": "tsc index.ts && node index.js",
-    "dev": "npm run checklint && ./node_modules/nodemon/bin/nodemon.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "rnunez",
-  "license": "ISC",
+  "main": "app.js",
+  "repository": "https://github.com/Cryosis-stat/caso3_Jose_P-Jose_A.git",
+  "author": "Cryosis-stat <josepabloms@gmail.com>",
+  "license": "MIT",
   "dependencies": {
-    "express": "4.17.1"
+    "@types/express": "^4.17.13",
+    "body-parser": "^1.19.0",
+    "concurrently": "^6.2.1",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.7",
+    "nodemon": "^2.0.12"
   },
-  "devDependencies": {
-    "@types/express": "4.17.8",
-    "@types/node": "14.11.8",
-    "@typescript-eslint/eslint-plugin": "^4.6.1",
-    "@typescript-eslint/parser": "^4.6.1",
-    "eslint": "7.12.1",
-    "nodemon": "2.0.4",
-    "ts-node": "9.0.0",
-    "tslint": "6.1.3",
-    "typescript": "4.0.3"
+  "scripts": {
+    "watch-ts": "tsc -w",
+    "watch-node": "nodemon dist/app.js",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" \"yarn run watch-ts\" \"yarn run watch-node\""
   }
 }
