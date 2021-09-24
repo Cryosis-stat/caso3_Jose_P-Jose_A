@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const uri: string = 'mongodb://192.168.99.100:27017/local'
+const uri: string = 'mongodb://localhost:27017/auctionsdb'
 
 mongoose.connect(uri, (err: any) => {
     if(err) {
