@@ -17,10 +17,10 @@ export const ItemSchema = new mongoose.Schema(
     "year": {type:Date, required:true},
     "photo": {type:String, required:true},
     "initial_price": {type:Number, required:true},
-    "actual_price": Number,
+    "actual_price": {type:Number, required:true},
     "max_date": {type:Date, required:true},
     "status": {type:Boolean, default:1},
-    "bidder_name": {type:String, required:true},
+    "bidder_name": {type:String},
     "owner": {
         "name": {type:String, required:true},
         "email": {type:String, required:true},       
