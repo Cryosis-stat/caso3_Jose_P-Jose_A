@@ -4,15 +4,15 @@ import moment from 'moment';
 
 // get all - retorna todos los objetos activos
 export let allItems = (req: Request, res: Response) => {
-    let items = Items.aggregate([{ "$match": { "status": 1 } },{
-        $project: {
+    let items = Items.aggregate([
+        { $project: {
             name: 1,
             description: 1,
             photo: 1,
             initial_price: 1,
             actual_price: 1,
-            status: 1,
             bidder_name: 1,
+            status: 1,
             owner: {
                 name: 1,
                 email: 1,       
@@ -20,7 +20,11 @@ export let allItems = (req: Request, res: Response) => {
             max_date: { $dateToString: { format: "%Y-%m-%d %H:%M", date: "$max_date" } },
             year: { $dateToString: { format: "%Y", date: "$year" } }
             }
-        }],
+        },
+        { $match: {
+            status: true} 
+        }
+        ],
         (err: any, items:any) => {
         if(err){
             res.send(err);
