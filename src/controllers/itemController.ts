@@ -1,9 +1,27 @@
 import { Request, Response } from 'express';
 import Items from './../items';
+import moment from 'moment';
 
 // get all - retorna todos los objetos activos
 export let allItems = (req: Request, res: Response) => {
-    let items = Items.find({"status": 1},(err: any, items:any) => {
+    let items = Items.aggregate([{ "$match": { "status": 1 } },{
+        $project: {
+            name: 1,
+            description: 1,
+            photo: 1,
+            initial_price: 1,
+            actual_price: 1,
+            status: 1,
+            bidder_name: 1,
+            owner: {
+                name: 1,
+                email: 1,       
+            },
+            max_date: { $dateToString: { format: "%Y-%m-%d %H:%M", date: "$max_date" } },
+            year: { $dateToString: { format: "%Y", date: "$year" } }
+            }
+        }],
+        (err: any, items:any) => {
         if(err){
             res.send(err);
         } else{
@@ -11,6 +29,7 @@ export let allItems = (req: Request, res: Response) => {
         }
     })
 }
+
 // get all - retorna objetos activos e inactivos
 export let historyItems = (req: Request, res: Response) => {
     let items = Items.find((err: any, items:any) => {
@@ -20,7 +39,7 @@ export let historyItems = (req: Request, res: Response) => {
             res.send(items);
         }
     })
-}
+}        
 
 // get - retorna uno especifico
 export let getItem = (req: Request, res: Response) => {
@@ -88,4 +107,83 @@ export let bidItem = (req: Request, res: Response) => {
             res.send("Bid placed");
         }   
     })
+}
+// listar con filtros
+export let getItemByFilter = (req: Request, res: Response) =>
+{
+    // filtrar si le falta cierta cantidad de horas
+    if (req.body.days != null)
+    {
+        // fecha actual
+        let date: Date = new Date();
+        // convertir dias a horas
+        const horas = req.body.days * 24
+        // sumar horas a la fecha actual
+        date.setTime(date.getTime() + ((horas - 6) * 60 * 60 * 1000) )
+        // query
+        Items.find({status: 1, max_date: {$lte: date}},
+                (err: any, items: any) => {
+                    if(err){
+                        res.send();
+                    } else{
+                        res.send(items);
+                    }   
+                })
+    } 
+    else if (req.body.hours != null){
+        // fecha actual
+        let date: Date = new Date();
+        // horas del request
+        const horas = req.body.hours
+        // sumar horas a la fecha actual
+        date.setTime(date.getTime() + (horas * 60 * 60 * 1000) - 21600000)
+        // query
+        Items.find({status: 1, max_date: {$lte: date}},
+            (err: any, items: any) => {
+                if(err){
+                    res.send();
+                } else{
+                    res.send(items);
+                }   
+            })
+    } 
+    else if (req.body.min_price != null && req.body.max_price != null) // rango de precios
+    {
+        const min_price = req.body.min_price
+        const max_price = req.body.max_price
+        Items.find({status: 1, actual_price: {$gte: min_price, $lte: max_price}},
+                (err: any, items: any) => {
+                    if(err){
+                        res.send();
+                    } else{
+                        res.send(items);
+                    }   
+                })
+    }
+    else if (req.body.min_years != null && req.body.max_years != null) // año de antiguedad
+    {
+        const min_years = req.body.min_years
+        const max_years = req.body.max_years
+        Items.find({status: 1, year: {$gte: min_years, $lte: max_years}},
+                (err: any, items: any) => {
+                    if(err){
+                        res.send();
+                    } else{
+                        res.send(items);
+                    }   
+                })
+    }
+    else
+    {
+        // si no, retorne todos los que esten activos
+        Items.find({status: 1},
+            (err: any, items: any) => {
+                if(err){
+                    res.send();
+                } else{
+                    res.send(items);
+                }   
+            })
+    }
+     
 }

@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemSchema = void 0;
 var mongoose_1 = __importDefault(require("mongoose"));
-var uri = 'mongodb://192.168.99.100:27017/local';
+var uri = 'mongodb://localhost:27017/auctionsdb';
 mongoose_1.default.connect(uri, function (err) {
     if (err) {
         console.log(err.message);
