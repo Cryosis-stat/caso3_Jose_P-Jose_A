@@ -6,7 +6,7 @@
         <div class="photo">
             <div class="img" style="background-image: url({{photo}});"></div>
             <div class="price">
-                {{actual_price}}
+                Price: {{actual_price}} CRC by {{bidder_name}}
             </div>
                 <div class="title">
                     <div class="sale-label">
@@ -31,6 +31,7 @@
             <div class="bottom">
             	Dueño: {{owner.name}}
             </div>
+            
             <div class="bottom">
             	Fecha y hora maxima para pujar:
 							<div> 
